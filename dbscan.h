@@ -2,25 +2,25 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 
-const cv::Scalar COLORS[11] = {
-    cv::Scalar(0,0,255),
-    cv::Scalar(0,255,0),
-    cv::Scalar(255,0,0),
-    cv::Scalar(255,255,255),
-    cv::Scalar(255,255,0),
-    cv::Scalar(0,255,255),
-    cv::Scalar(255,0,255),
-    cv::Scalar(255,0,128),
-    cv::Scalar(255,64,255),
-    cv::Scalar(128,128,255),
-    cv::Scalar(255,128,128)
+const cv::Vec3b COLORS[11] = {
+    cv::Vec3b(0,0,255),
+    cv::Vec3b(0,255,0),
+    cv::Vec3b(255,0,0),
+    cv::Vec3b(255,255,255),
+    cv::Vec3b(255,255,0),
+    cv::Vec3b(0,255,255),
+    cv::Vec3b(255,0,255),
+    cv::Vec3b(255,0,128),
+    cv::Vec3b(255,64,255),
+    cv::Vec3b(128,128,255),
+    cv::Vec3b(255,128,128)
 };
 
 class DBSCAN {
 public:
     DBSCAN();
-    DBSCAN(int min_sample, double eps, int height, int width);
-    DBSCAN(int min_sample, double eps, int height, int width,
+    DBSCAN(int min_sample, double eps);
+    DBSCAN(int min_sample, double eps,
            double seed_bnd_left, double seed_bnd_right, double seed_bnd_top, double seed_bnd_bot);
 
     void Run();
@@ -28,12 +28,11 @@ public:
     void ClusterSeeds();
     void FilterCluster(unsigned int thres);
     cv::Mat GenVizImage();
-//    cv::Mat GetNonSeedRegion();
+    cv::Mat GetNonSeedRegion();
 
 
 private:
     void GenNeighborOffset();
-    void InitMat();
 
     bool IsSeed(int row, int col);
     bool IsValid(int row, int col);
@@ -42,7 +41,7 @@ private:
 
     void QueryNeighbors(int row, int col, std::vector<cv::Point>& neighbor);
 
-    void ExpandCluster(unsigned char c, const std::vector<cv::Point>& neighbor);
+    void ExpandCluster(uchar c, const std::vector<cv::Point>& neighbor);
 
     int min_sample_ = 3;
     double eps_ = 1.5;
@@ -63,10 +62,8 @@ private:
     cv::Mat label_;
     cv::Mat tmp_label1_;     // used in nearest neighbor classification for non-seeds
     cv::Mat tmp_label2_;     // used in nearest neighbor classification for non-seeds
-    cv::Mat viz_img_;
-//    cv::Mat region_;
     std::vector<cv::Point> neighbor_offset_;
 
-    unsigned char num_class_;
+    uchar num_class_;
 
 };

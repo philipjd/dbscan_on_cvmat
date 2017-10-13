@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.5.1)
 project(test_dbscan)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/)
 message(STATUS "  CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
