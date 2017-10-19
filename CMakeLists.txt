@@ -19,6 +19,6 @@ include_directories(${GFLAGS_INCLUDE_DIRS})
 find_package(Glog REQUIRED)
 include_directories(${GLOG_INCLUDE_DIRS})
 
-set(SOURCE_FILES dbscan.cpp main.cpp)
+set(SOURCE_FILES iterative_dbscan.cpp dbscan.cpp main.cpp)
 add_executable(test_dbscan ${SOURCE_FILES})
 target_link_libraries(test_dbscan ${OpenCV_LIBS} ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES})

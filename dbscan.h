@@ -1,43 +1,41 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <opencv2/opencv.hpp>
 
-const cv::Vec3b COLORS[11] = {
-    cv::Vec3b(0,0,255),
-    cv::Vec3b(0,255,0),
-    cv::Vec3b(255,0,0),
-    cv::Vec3b(255,255,255),
-    cv::Vec3b(255,255,0),
-    cv::Vec3b(0,255,255),
-    cv::Vec3b(255,0,255),
-    cv::Vec3b(255,0,128),
-    cv::Vec3b(255,64,255),
-    cv::Vec3b(128,128,255),
-    cv::Vec3b(255,128,128)
-};
+#include "basic.h"
 
 class DBSCAN {
 public:
     DBSCAN();
     DBSCAN(int min_sample, double eps);
-    DBSCAN(int min_sample, double eps,
-           double seed_bnd_left, double seed_bnd_right, double seed_bnd_top, double seed_bnd_bot);
+    DBSCAN(int min_sample, double eps, double seed_bnd_bot);
+    DBSCAN(int min_sample, double eps, double seed_bnd_bot, double seed_bnd_top);
 
     void Run();
     void SetImage(const cv::Mat& img);
+    void Init();
     void ClusterSeeds();
+    void ClassifyNonseeds();
     void FilterCluster(unsigned int thres);
     cv::Mat GenVizImage();
-    cv::Mat GetNonSeedRegion();
+
+
+    void SetFilterThreshold(unsigned int thres) { filter_thres_ = thres; }
 
 
 private:
+    void ClassifyNonseedsRow(int i);
+
     void GenNeighborOffset();
 
-    bool IsSeed(int row, int col);
+    bool IsSeed(int row);
     bool IsValid(int row, int col);
     bool IsVisited(int row, int col);
     bool IsNoise(int row, int col);
+
+    void Swap();
 
     void QueryNeighbors(int row, int col, std::vector<cv::Point>& neighbor);
 
@@ -45,18 +43,17 @@ private:
 
     int min_sample_ = 3;
     double eps_ = 1.5;
-    double seed_bnd_left_ratio_ = -1.0;
-    double seed_bnd_right_ratio_ = -1.0;
     double seed_bnd_top_ratio_ = -1.0;
     double seed_bnd_bot_ratio_ = -1.0;
-    int seed_bnd_left_ = -1;
-    int seed_bnd_right_ = -1;
     int seed_bnd_top_ = -1;
     int seed_bnd_bot_ = -1;
     bool seed_region_ = false;
+    bool swap_seed_region_ = false;
+    bool swapped_ = true;
 
     int img_height_;
     int img_width_;
+    unsigned int filter_thres_;
 
     cv::Mat img_;
     cv::Mat label_;
@@ -64,6 +61,6 @@ private:
     cv::Mat tmp_label2_;     // used in nearest neighbor classification for non-seeds
     std::vector<cv::Point> neighbor_offset_;
 
-    uchar num_class_;
+    uchar num_class_ = 0;
 
 };
